@@ -4,13 +4,18 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
-package-lock.json
 .pnpm-debug.log*
 
-# Build
+# Build outputs
 dist/
 coverage/
+
+# Vitest / Vite caches
 .vite/
+.vitest/
+*.tap
+*.lcov
+results.json
 
 # Editor / OS
 .DS_Store
@@ -21,12 +26,5 @@ Thumbs.db
 .vscode/
 *.code-workspace
 
-# Vitest cache
-.vitest/
-.vite/
-*.tap
-*.lcov
-results.json
-
-# Other
+# Environment files
 .env
