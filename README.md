@@ -21,7 +21,7 @@ The plot below shows 95% Wald confidence intervals for three strata with differe
 
 ## Getting started
 
-Clone and install:
+### Clone and install:
 
 ```bash
 git clone https://github.com/grthomson/optibin.git
@@ -29,11 +29,11 @@ cd optibin
 npm install
 ```
 
-Run the test suite:
+### Run the test suite:
 
 ```npm test```
 
-Rebuild + export demo figures:
+### Rebuild + export demo figures:
 
 ```
 npm run build
@@ -59,7 +59,7 @@ OptiBin focuses on binary-outcome (proportion) evaluation with a clean-room Type
 - [optimall](https://cran.r-project.org/web/packages/optimall/index.html) (R)
 Established R package for optimal allocation workflows (including Neyman-style allocation). If you work in R, it's a good cross-check for allocations and design decisions.
 
-– [ssepy](https://github.com/amazon-science/ssepy) (Python)
+- [ssepy](https://github.com/amazon-science/ssepy) (Python)
 Useful for sample size and proportion calculations.
 
 These tools serve similar planning/estimation aims; OptiBin's value is offering a minimal, typed TS implementation that's easy to plug into web dashboards or CI pipelines, plus headless PNG exports for docs
