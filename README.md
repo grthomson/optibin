@@ -1,4 +1,5 @@
 # OptiBin
+[![CI](https://github.com/grthomson/optibin/actions/workflows/ci.yml/badge.svg)](https://github.com/grthomson/optibin/actions/workflows/ci.yml)
 
 Efficient sample allocation and error estimation for **binary classification evaluation**.
 
@@ -11,7 +12,7 @@ This project demonstrates:
 
 ---
 
-## Example: Confidence Intervals
+### Example: Confidence Intervals
 
 The plot below shows 95% Wald confidence intervals for three strata with different error prevalences (and therefore variances):
 
@@ -62,4 +63,9 @@ Established R package for optimal allocation workflows (including Neyman-style a
 - [ssepy](https://github.com/amazon-science/ssepy) (Python)
 Useful for sample size and proportion calculations.
 
-These tools serve similar planning/estimation aims; OptiBin's value is offering a minimal, typed TS implementation that's easy to plug into web dashboards or CI pipelines, plus headless PNG exports for docs
+These tools serve similar planning/estimation aims; OptiBin's value is offering a minimal, typed TS implementation that's easy to plug into web dashboards or CI pipelines, plus headless PNG exports for docs.
+
+## CI
+
+The GitHub Actions workflow runs on every push and pull request.  
+It installs dependencies, type-checks the TypeScript, runs the Vitest unit tests, and builds the project on both **Linux** and **Windows** using Node.js 20.
