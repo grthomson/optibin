@@ -7,50 +7,52 @@ export type StratumRow = {
 
 /**
  * Neyman-style allocation with stratum caps + iterative reallocation.
- * - Census if totalSampleSize >= total population.
- * - If expected_error_count missing for ALL rows ⇒ p=0.5 (proportional fallback).
- * - Otherwise p_h = expected_error_count / stratum_size (clamped to [0,1]).
- * - Weight_h = N_h * sqrt(p_h * (1 - p_h)).
- * - Math.round; no drift fix (to mirror typical Python round behavior).
  */
 export function neymanAllocate(
   strata: StratumRow[],
   totalSampleSize: number
-): Record<string | number, number> {
+): Record<string, number> {
   if (strata.length === 0) return {};
 
-  const sizes = new Map(strata.map(s => [s.stratum_id, s.stratum_size]));
+  // 🔑 normalize all IDs to string once
+  const normStrata = strata.map(s => ({
+    id: String(s.stratum_id),
+    N: s.stratum_size,
+    expected_error_count: s.expected_error_count,
+  }));
+
+  const sizes = new Map(normStrata.map(s => [s.id, s.N]));
   const totalPop = [...sizes.values()].reduce((a, b) => a + b, 0);
 
   // Census case
   if (totalSampleSize >= totalPop) {
-    const out: Record<string | number, number> = {};
-    for (const s of strata) out[s.stratum_id] = s.stratum_size;
+    const out: Record<string, number> = {};
+    for (const s of normStrata) out[s.id] = s.N;
     return out;
   }
 
-  const hasErrCol = strata.some(s => s.expected_error_count !== undefined);
+  const hasErrCol = normStrata.some(s => s.expected_error_count !== undefined);
 
   // p-hat per stratum
-  const pHat = new Map<string | number, number>();
-  for (const s of strata) {
+  const pHat = new Map<string, number>();
+  for (const s of normStrata) {
     const p = hasErrCol
-      ? Math.max(0, Math.min(1, (s.expected_error_count ?? 0) / Math.max(1, s.stratum_size)))
+      ? Math.max(0, Math.min(1, (s.expected_error_count ?? 0) / Math.max(1, s.N)))
       : 0.5;
-    pHat.set(s.stratum_id, p);
+    pHat.set(s.id, p);
   }
 
   let remaining = totalSampleSize;
-  const allIds = new Set(strata.map(s => s.stratum_id));
-  const filled = new Set<string | number>();
-  const alloc: Record<string | number, number> = {};
+  const allIds = new Set(normStrata.map(s => s.id));
+  const filled = new Set<string>();
+  const alloc: Record<string, number> = {};
 
   while (true) {
     const unfilled = [...allIds].filter(id => !filled.has(id));
 
     // weights for unfilled
     let sumW = 0;
-    const weights = new Map<string | number, number>();
+    const weights = new Map<string, number>();
     for (const id of unfilled) {
       const N = sizes.get(id)!;
       const p = pHat.get(id)!;
@@ -87,7 +89,7 @@ export function neymanAllocate(
     }
 
     // recompute remaining
-    const filledTotal = [...filled].reduce((a, id) => a + alloc[id], 0);
+    const filledTotal = [...filled].reduce((a, id) => a + (alloc[id] ?? 0), 0);
     remaining = totalSampleSize - filledTotal;
     if (remaining <= 0) break;
   }
