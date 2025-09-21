@@ -1,0 +1,32 @@
+# Node
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+package-lock.json
+.pnpm-debug.log*
+
+# Build
+dist/
+coverage/
+.vite/
+
+# Editor / OS
+.DS_Store
+Thumbs.db
+*.log
+
+# VSCode
+.vscode/
+*.code-workspace
+
+# Vitest cache
+.vitest/
+.vite/
+*.tap
+*.lcov
+results.json
+
+# Other
+.env

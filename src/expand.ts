@@ -30,7 +30,7 @@ export function expandErrorEstimates(rows: ClericalRow[]) {
     // binomial variance with finite population correction (as per your Python)
     const var_h =
       n > 0 && N > 1
-        ? (phat * (1 - phat)) / n * ((N * n) / (N - 1))
+        ? (phat * (1 - phat)) / n * ((N - n) / (N - 1))   // ← correct FPC
         : 0;
 
     est += w * phat;
